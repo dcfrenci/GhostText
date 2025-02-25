@@ -1,4 +1,18 @@
 package com.dcfrenci.ghosttext.data
 
-class Ghost {
+import android.media.Image
+
+class Ghost (image : Image) {
+    fun getGhostImage(message: String) {
+
+    }
+
+    fun getMessage() {
+
+    }
+
+    fun analyze() {
+
+    }
+
 }

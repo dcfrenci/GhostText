@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,7 +12,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.dcfrenci.ghosttext.data.BottomNavigationItems
 
 @Composable
-fun NavigationGraph(navController: NavHostController, onBottomBarVisibilityChanged: (Boolean) -> Unit) {
+fun NavigationGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = BottomNavigationItems.CreateScreen.route) {
         composable(BottomNavigationItems.CreateScreen.route) { CreateScreenUI() }
         composable(BottomNavigationItems.AnalyzeScreen.route) { AnalyzeScreenUI() }
@@ -22,39 +21,29 @@ fun NavigationGraph(navController: NavHostController, onBottomBarVisibilityChang
 
 @Composable
 fun NavigationBar(
+    items: List<BottomNavigationItems>,
     navController: NavHostController,
-    state: Boolean,
     modifier: Modifier = Modifier,
+    onItemClick: (BottomNavigationItems) -> Unit
 ){
-    val screens = listOf(
-        BottomNavigationItems.CreateScreen,
-        BottomNavigationItems.AnalyzeScreen
-    )
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
     NavigationBar (
         modifier = modifier,
-        containerColor = Color.LightGray
+        //TODO - Change color
+        containerColor = Color.DarkGray
     ){
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
 
-        screens.forEach { screen ->
+        items.forEach { item ->
             NavigationBarItem(
-                label = { Text(text = screen.title) },
-                icon = { Icon(imageVector = screen.icon!!, contentDescription = "") },
-                selected = currentRoute == screen.route,
-                onClick = {
-                    navController.navigate(screen.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                },
+                label   = { Text(text = item.title) },
+                icon    = { Icon(imageVector = item.icon, contentDescription = "") },
+                onClick = { onItemClick(item) },
+                selected = currentRoute == item.route,
                 // TODO - Choose colors
                 colors = NavigationBarItemColors(
-                    selectedIconColor = Color.Black,
-                    selectedTextColor = Color.Black,
+                    selectedIconColor = Color.White,
+                    selectedTextColor = Color.White,
                     selectedIndicatorColor = Color.Green,
                     unselectedIconColor = Color.Gray,
                     unselectedTextColor = Color.Gray,

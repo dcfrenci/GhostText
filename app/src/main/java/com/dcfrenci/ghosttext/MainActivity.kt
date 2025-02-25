@@ -4,13 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.dcfrenci.ghosttext.data.BottomNavigationItems
 import com.dcfrenci.ghosttext.ui.screen.NavigationBar
 import com.dcfrenci.ghosttext.ui.screen.NavigationGraph
 import com.dcfrenci.ghosttext.ui.theme.GhostTextTheme
@@ -22,28 +21,28 @@ class MainActivity : ComponentActivity() {
         setContent {
             GhostTextTheme {
                 val navController: NavHostController = rememberNavController()
-                var buttonVisible by remember { mutableStateOf(true)}
                 Scaffold(
                     bottomBar = {
-                        if (buttonVisible) {
-                            NavigationBar(
-                                navController = navController,
-                                state = buttonVisible,
-                                modifier = Modifier
-                            )
-                        }
+                        NavigationBar(
+                            items = listOf(
+                                BottomNavigationItems.CreateScreen,
+                                BottomNavigationItems.AnalyzeScreen
+                            ),
+                            navController = navController,
+                            modifier = Modifier,
+                            onItemClick = {
+                                navController.navigate(it.route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        )
                     }
                 ){
-                    paddingValues ->
-                    Box(
-                        modifier = Modifier.padding(paddingValues)
-                    ) {
-                        NavigationGraph(navController = navController) {
-                            isVisible ->
-                                buttonVisible = isVisible
-                        }
-                    }
-
+                    NavigationGraph(navController = navController)
                 }
             }
         }
