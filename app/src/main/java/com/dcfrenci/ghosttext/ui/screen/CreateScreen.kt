@@ -1,5 +1,7 @@
 package com.dcfrenci.ghosttext.ui.screen
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -47,6 +49,10 @@ fun CreateScreenUI(viewModelCreate: ViewModelCreate) {
                 text = ""
             )
         }
+        val galleryPicker = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.PickVisualMedia(),
+            onResult = {uri -> viewModelCreate.updateUri(uri)}
+        )
         if (viewModelCreate.upload) {
             Column(
                 modifier = Modifier.width(IntrinsicSize.Max)
@@ -55,7 +61,7 @@ fun CreateScreenUI(viewModelCreate: ViewModelCreate) {
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
                         viewModelCreate.updateUpload()
-                        viewModelCreate.loadGallery()
+                        viewModelCreate.loadGallery(galleryPicker)
                     }
                 ) {
                     IconTextButton(
