@@ -21,17 +21,19 @@ import com.dcfrenci.ghosttext.ui.screen.NavigationBar
 import com.dcfrenci.ghosttext.ui.screen.NavigationGraph
 import com.dcfrenci.ghosttext.ui.theme.GhostTextTheme
 import com.dcfrenci.ghosttext.viewmodel.ViewModelAnalyze
+import com.dcfrenci.ghosttext.viewmodel.ViewModelCreate
 
 class MainActivity : ComponentActivity() {
-
+    private val viewModelCreate by viewModels<ViewModelCreate>()
     private val viewModelAnalyze by viewModels<ViewModelAnalyze>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val startDestination = if (intent?.action == Intent.ACTION_MAIN) {
-            BottomNavigationItems.CreateScreen.route
-        } else {
-            BottomNavigationItems.AnalyzeScreen.route
+
+        var startDestination = BottomNavigationItems.CreateScreen.route
+        if (intent?.action == Intent.ACTION_SEND) {
+            startDestination = BottomNavigationItems.AnalyzeScreen.route
+            analyzeIntent(intent, viewModelAnalyze)
         }
         enableEdgeToEdge()
         setContent {
@@ -58,7 +60,10 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ){
-                    NavigationGraph(navController = navController, startDestination)
+                    NavigationGraph(navController = navController,
+                        startDestination = startDestination,
+                        viewModelCreate = viewModelCreate,
+                        viewModelAnalyze = viewModelAnalyze)
                 }
             }
         }
@@ -66,12 +71,15 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent?.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
-        } else {
-            intent?.getParcelableExtra(Intent.EXTRA_STREAM)
-        }
-        viewModelAnalyze.updateUri(uri)
+        analyzeIntent(intent, viewModelAnalyze)
     }
 }
 
+fun analyzeIntent(intent: Intent?, viewModelAnalyze: ViewModelAnalyze){
+    val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        intent?.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
+    } else {
+        intent?.getParcelableExtra(Intent.EXTRA_STREAM)
+    }
+    viewModelAnalyze.updateUri(uri)
+}
