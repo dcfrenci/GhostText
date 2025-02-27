@@ -53,6 +53,14 @@ fun CreateScreenUI(viewModelCreate: ViewModelCreate) {
             contract = ActivityResultContracts.PickVisualMedia(),
             onResult = {uri -> viewModelCreate.updateUri(uri)}
         )
+        val cameraPicker = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.TakePicturePreview(),
+            onResult = { bitmap ->
+                bitmap?.let {
+                    viewModelCreate.loadCamera(it)
+                }
+            }
+        )
         if (viewModelCreate.upload) {
             Column(
                 modifier = Modifier.width(IntrinsicSize.Max)
@@ -75,7 +83,7 @@ fun CreateScreenUI(viewModelCreate: ViewModelCreate) {
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
                         viewModelCreate.updateUpload()
-                        viewModelCreate.loadCamera()
+                        cameraPicker.launch(null)
                     }
                 ) {
                     IconTextButton(

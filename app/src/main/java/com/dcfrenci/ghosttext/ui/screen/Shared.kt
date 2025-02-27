@@ -92,7 +92,8 @@ fun ImageCard(
             Image(
                 painter = rememberAsyncImagePainter(uri),
                 contentDescription = contentDescription,
-                contentScale = ContentScale.Crop
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Fit
             )
         }
     }
