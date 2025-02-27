@@ -1,5 +1,6 @@
 package com.dcfrenci.ghosttext.ui.screen
 
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -10,6 +11,7 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -51,13 +53,23 @@ fun CreateScreenUI(viewModelCreate: ViewModelCreate) {
         }
         val galleryPicker = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.PickVisualMedia(),
-            onResult = {uri -> viewModelCreate.updateUri(uri)}
+            onResult = { uri -> viewModelCreate.updateUri(uri) }
         )
+//        val cameraPicker = rememberLauncherForActivityResult(
+//            contract = ActivityResultContracts.TakePicturePreview(),
+//            onResult = { bitmap ->
+//                bitmap?.let {
+//                    viewModelCreate.loadCamera(it)
+//                }
+//            }
+//        )
         val cameraPicker = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.TakePicturePreview(),
-            onResult = { bitmap ->
-                bitmap?.let {
-                    viewModelCreate.loadCamera(it)
+            contract = ActivityResultContracts.TakePicture(),
+            onResult = {
+                results ->
+                if (results) {
+//                    viewModelCreate.updateUri(viewModelCreate.tempUri)
+                    viewModelCreate.updateUri(viewModelCreate.photoUri)
                 }
             }
         )
@@ -83,7 +95,7 @@ fun CreateScreenUI(viewModelCreate: ViewModelCreate) {
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
                         viewModelCreate.updateUpload()
-                        cameraPicker.launch(null)
+                        cameraPicker.launch(viewModelCreate.loadCamera())
                     }
                 ) {
                     IconTextButton(
