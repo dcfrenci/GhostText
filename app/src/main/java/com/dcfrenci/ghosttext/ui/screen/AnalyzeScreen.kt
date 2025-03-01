@@ -6,13 +6,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import com.dcfrenci.ghosttext.viewmodel.ViewModelAnalyze
 
 @Composable
@@ -42,7 +38,7 @@ fun AnalyzeScreenUI(viewModelAnalyze: ViewModelAnalyze) {
         SearchButton(viewModelAnalyze)
         SpaceItemColumn()
         //Text found
-        MessageBox(modifier = Modifier, viewModelAnalyze.getMessage())
+        MessageBox(viewModelAnalyze = viewModelAnalyze)
     }
 }
 
@@ -53,7 +49,7 @@ fun SearchButton(
     Box {
         ElevatedButton(
             modifier = Modifier.width(IntrinsicSize.Max),
-            onClick = { viewModelAnalyze.searchMessage() }
+            onClick = { viewModelAnalyze.getMessage() }
         ) {
             IconTextButton(
                 imageVector = Icons.Outlined.Search,

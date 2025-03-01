@@ -9,8 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Android
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -124,29 +123,35 @@ fun ImageCardLost(
 
 @Composable
 fun MessageBox(
-    modifier: Modifier = Modifier,
-    message: String = "",
+    viewModelCreate: ViewModelCreate? = null,
+    viewModelAnalyze: ViewModelAnalyze? = null,
     input: Boolean = false
 ) {
     Card(
         shape = RoundedCornerShape(10.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
         border = BorderStroke(2.dp, Color.White),
-        modifier = Modifier.wrapContentSize()
+        modifier = Modifier
+            .wrapContentHeight()
+            .fillMaxWidth(0.8f)
     ) {
         if (input) {
-            TextField(
-                value = message,
-                onValueChange = {}
-            )
+            viewModelCreate?.let { viewModel ->
+                TextField(
+                    value = viewModel.message,
+                    onValueChange = { updatedMessage ->
+                        viewModel.updateMessage(updatedMessage)
+                    }
+                )
+            }
         } else {
-            Text(
-                message,
-                modifier = modifier
-                    .width(250.dp)
-                    .heightIn(100.dp, 200.dp)
-                    .padding(5.dp)
-            )
+            viewModelAnalyze?.let { viewModel ->
+                TextField(
+                    value = viewModel.message,
+                    onValueChange = {},
+                    readOnly = true
+                )
+            }
         }
     }
 }

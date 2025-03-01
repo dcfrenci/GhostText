@@ -1,23 +1,29 @@
 package com.dcfrenci.ghosttext.viewmodel
 
-import android.media.Image
+import android.app.Application
 import android.net.Uri
 import androidx.compose.runtime.*
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
+import com.dcfrenci.ghosttext.data.Ghost
 
-class ViewModelAnalyze : ViewModel() {
+class ViewModelAnalyze(application: Application) : AndroidViewModel(application) {
     var uri: Uri? by mutableStateOf(null)
+        private set
+    var message: String by mutableStateOf("")
+        private set
 
     fun updateUri(uri: Uri?) {
         this.uri = uri
     }
 
-    fun searchMessage() {
-
+    private fun updateMessage(string: String) {
+        this.message = string
     }
 
-    fun getMessage(): String {
-        //TODO("Provide the return value")
-        return "no function"
+    fun getMessage() {
+        uri?.let {
+            val ghostMessage = Ghost(getApplication(), it).getMessage()
+            updateMessage(ghostMessage.ifEmpty { "No message found" })
+        }
     }
 }

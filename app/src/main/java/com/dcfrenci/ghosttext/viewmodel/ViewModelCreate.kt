@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
 import androidx.lifecycle.AndroidViewModel
+import com.dcfrenci.ghosttext.data.Ghost
 import java.io.File
 import java.io.FileOutputStream
 
@@ -27,15 +28,23 @@ class ViewModelCreate(application: Application) :/* ViewModel()*/AndroidViewMode
         private set
     var upload: Boolean by mutableStateOf(false)
         private set
+    var message: String by mutableStateOf("")
+        private set
 
     fun updateUri(uri: Uri?) {
         this.uri = uri
     }
+
     private fun updatePhotoUri(uri: Uri?) {
         this.photoUri = uri
     }
+
     fun updateUpload() {
         this.upload = !upload
+    }
+
+    fun updateMessage(string: String) {
+        this.message = string
     }
 
     //Button for loading the image
@@ -67,17 +76,36 @@ class ViewModelCreate(application: Application) :/* ViewModel()*/AndroidViewMode
     }
 
     fun exportShare() {
-        val context = getApplication<Application>().applicationContext
         uri?.let {
-            val intent = Intent(Intent.ACTION_SEND)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            intent.setType(context.contentResolver.getType(it))
-            intent.putExtra(Intent.EXTRA_STREAM, it)
+            val ghostUri = Ghost(getApplication(), it).getGhostUri(message)
+            if (ghostUri != null) {
+                val context = getApplication<Application>().applicationContext
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                intent.setType(context.contentResolver.getType(ghostUri))
+                intent.putExtra(Intent.EXTRA_STREAM, ghostUri)
 
-            if (intent.resolveActivity(context.packageManager) != null) {
-                context.startActivity(intent)
+                if (intent.resolveActivity(context.packageManager) != null) {
+                    context.startActivity(intent)
+                }
+            } else {
+                //TODO - Add error during creating ghost image
             }
         }
+//        val context = getApplication<Application>().applicationContext
+//
+//
+//        uri?.let {
+//            val intent = Intent(Intent.ACTION_SEND)
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+//            intent.setType(context.contentResolver.getType(it))
+//            intent.putExtra(Intent.EXTRA_STREAM, it)
+//
+//            if (intent.resolveActivity(context.packageManager) != null) {
+//                context.startActivity(intent)
+//            }
+//        }
     }
 }
