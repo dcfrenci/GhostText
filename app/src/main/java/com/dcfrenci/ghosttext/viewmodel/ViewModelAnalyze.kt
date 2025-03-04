@@ -13,6 +13,13 @@ class ViewModelAnalyze(application: Application) : AndroidViewModel(application)
         private set
 
     fun updateUri(uri: Uri?) {
+        val context = getApplication<Application>().applicationContext
+        uri?.let {
+            if (context.contentResolver.getType(it) == "application/pdf") {
+                this.uri = Ghost(getApplication(), it).getImageUri()
+                return
+            }
+        }
         this.uri = uri
     }
 
