@@ -14,19 +14,19 @@ sealed class BottomNavigationItems(
 ) {
     data object CreateScreen: BottomNavigationItems(
         route = "create_screen",
-        title = "CreateScreen",
+        title = "Create",
         icon = Icons.Outlined.Construction
     )
 
     data object AnalyzeScreen: BottomNavigationItems(
         route = "analyze_screen",
-        title = "AnalyzeScreen",
+        title = "Analyze",
         icon = Icons.Outlined.ImageSearch
     )
 
     data object SecurityScreen: BottomNavigationItems(
         route = "security_screen",
-        title = "SecurityScreen",
+        title = "Security",
         icon = Icons.Outlined.Key
     )
 }

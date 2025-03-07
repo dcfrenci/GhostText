@@ -1,10 +1,7 @@
 package com.dcfrenci.ghosttext.ui.screen
 
-import android.widget.Space
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -12,9 +9,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.unit.dp
+import com.dcfrenci.ghosttext.ui.theme.SpacerElementSmall
+import com.dcfrenci.ghosttext.ui.theme.SpacerEndScreen
+import com.dcfrenci.ghosttext.ui.theme.SpacerStartScreen
 import com.dcfrenci.ghosttext.viewmodel.ViewModelSecurity
 
 @Composable
@@ -25,25 +22,12 @@ fun SecurityScreenUI(viewModelSecurity: ViewModelSecurity) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        SpaceItemColumn()
+        SpacerItemColumn(SpacerStartScreen)
+        TextTitle("Security")
+        SpacerItemColumn(SpacerElementSmall)
         // Sender public key
-        Text(
-            text = "My public key"
-        )
-        Card(
-            shape = RoundedCornerShape(10.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
-            border = BorderStroke(2.dp, Color.White),
-            modifier = Modifier
-                .wrapContentHeight()
-                .fillMaxWidth(0.8f)
-        ) {
-            TextField(
-                value = viewModelSecurity.publicKey,
-                onValueChange = {},
-                readOnly = true
-            )
-        }
+        MessageBox(viewModelSecurity = viewModelSecurity, readOnly = true)
+        SpacerItemColumn(SpacerElementSmall)
         Row (
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
@@ -52,42 +36,30 @@ fun SecurityScreenUI(viewModelSecurity: ViewModelSecurity) {
             ElevatedButton(
                 onClick = { viewModelSecurity.senderGenerate() }
             ) {
-                RowIconTextButton(
+                IconTextButton(
+                    arrangement = Arrangement.Center,
                     icon = Icons.Outlined.Update,
                     iconDescription = "icon_update",
                     text = "Generate"
                 )
             }
+            ButtonSpacerHorizontal()
             ElevatedButton(
                 onClick = { viewModelSecurity.senderCopy() }
             ) {
-                RowIconTextButton(
+                IconTextButton(
+                    arrangement = Arrangement.Center,
                     icon = Icons.Outlined.ContentCopy,
                     iconDescription = "icon_copy",
                     text = "Copy"
                 )
             }
         }
-        SpaceItemColumn()
+        SpacerItemColumn()
         // Receiver public key
-        Text(
-            text = "Receiver public key"
-        )
-        Card(
-            shape = RoundedCornerShape(10.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
-            border = BorderStroke(2.dp, Color.White),
-            modifier = Modifier
-                .wrapContentHeight()
-                .fillMaxWidth(0.8f)
-        ) {
-            TextField(
-                value = viewModelSecurity.receiverPublicKey,
-                onValueChange = { newReceiverPublicKey ->
-                    viewModelSecurity.updateReceiverPublicKey(newReceiverPublicKey)
-                }
-            )
-        }
+
+        MessageBox(viewModelSecurity = viewModelSecurity, readOnly = false)
+        SpacerItemColumn(SpacerElementSmall)
         Row (
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
@@ -95,43 +67,25 @@ fun SecurityScreenUI(viewModelSecurity: ViewModelSecurity) {
             ElevatedButton(
                 onClick = { viewModelSecurity.receiverPaste() }
             ) {
-                RowIconTextButton(
+                IconTextButton(
+                    arrangement = Arrangement.Center,
                     icon = Icons.Outlined.ContentPaste,
                     iconDescription = "icon_paste",
                     text = "Paste"
                 )
             }
+            ButtonSpacerHorizontal()
             ElevatedButton(
                 onClick = { viewModelSecurity.receiverCopy() }
             ) {
-                RowIconTextButton(
+                IconTextButton(
+                    arrangement = Arrangement.Center,
                     icon = Icons.Outlined.ContentCopy,
                     iconDescription = "icon_copy",
                     text = "Copy"
                 )
             }
         }
-        SpaceItemColumn(100)
-    }
-}
-
-@Composable
-fun RowIconTextButton(
-    icon: ImageVector = Icons.Outlined.QuestionMark,
-    iconDescription: String = "icon",
-    text: String = "",
-) {
-    Row (
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.width(IntrinsicSize.Max)
-    ){
-        Icon(
-            imageVector = icon,
-            contentDescription = iconDescription,
-        )
-        Text(
-            text = text
-        )
+        SpacerItemColumn(SpacerEndScreen)
     }
 }

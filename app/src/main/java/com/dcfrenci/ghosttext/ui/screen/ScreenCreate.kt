@@ -12,7 +12,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.dcfrenci.ghosttext.ui.theme.SpacerElementSmall
+import com.dcfrenci.ghosttext.ui.theme.SpacerEndScreen
+import com.dcfrenci.ghosttext.ui.theme.SpacerStartScreen
 import com.dcfrenci.ghosttext.viewmodel.ViewModelCreate
 
 @Composable
@@ -23,30 +25,22 @@ fun CreateScreenUI(viewModelCreate: ViewModelCreate) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        SpaceItemColumn()
+        SpacerItemColumn(SpacerStartScreen)
+        TextTitle("Create")
+        SpacerItemColumn(SpacerElementSmall)
         //Image
-        if (viewModelCreate.uri != null) {
-            viewModelCreate.uri?.let {
-                ImageCard(
-                    uri = it,
-                    contentDescription = "shared_image",
-                )
-            }
-        } else {
-            ImageCardLost(
-                modifier = Modifier
-            )
-        }
-        SpaceItemColumn()
+        Image(viewModelCreate = viewModelCreate)
+
+        SpacerItemColumn()
         //Buttons (upload: gallery - camera - stock? - generate?)
         ElevatedButton(
             modifier = Modifier.width(IntrinsicSize.Max),
             onClick = { viewModelCreate.updateUpload() }
         ) {
             IconTextButton(
-                imageVector = Icons.Outlined.Upload,
-                contentDescription = "icon_upload",
-                text = ""
+                arrangement = Arrangement.Center,
+                icon = Icons.Outlined.Upload,
+                iconDescription = "icon_upload",
             )
         }
         val galleryPicker = rememberLauncherForActivityResult(
@@ -75,8 +69,8 @@ fun CreateScreenUI(viewModelCreate: ViewModelCreate) {
                 ) {
                     IconTextButton(
                         arrangement = Arrangement.Start,
-                        imageVector = Icons.Outlined.PhotoLibrary,
-                        contentDescription = "icon_gallery",
+                        icon = Icons.Outlined.PhotoLibrary,
+                        iconDescription = "icon_gallery",
                         text = "Gallery"
                     )
                 }
@@ -89,8 +83,8 @@ fun CreateScreenUI(viewModelCreate: ViewModelCreate) {
                 ) {
                     IconTextButton(
                         arrangement = Arrangement.Start,
-                        imageVector = Icons.Outlined.CameraAlt,
-                        contentDescription = "icon_camera",
+                        icon = Icons.Outlined.CameraAlt,
+                        iconDescription = "icon_camera",
                         text = "Camera"
                     )
                 }
@@ -103,8 +97,8 @@ fun CreateScreenUI(viewModelCreate: ViewModelCreate) {
                 ) {
                     IconTextButton(
                         arrangement = Arrangement.Start,
-                        imageVector = Icons.Outlined.Storage,
-                        contentDescription = "icon_stock_photo",
+                        icon = Icons.Outlined.Storage,
+                        iconDescription = "icon_stock_photo",
                         text = "Stock photo"
                     )
                 }
@@ -117,17 +111,17 @@ fun CreateScreenUI(viewModelCreate: ViewModelCreate) {
                 ) {
                     IconTextButton(
                         arrangement = Arrangement.Start,
-                        imageVector = Icons.Outlined.AutoAwesome,
-                        contentDescription = "icon_generate",
+                        icon = Icons.Outlined.AutoAwesome,
+                        iconDescription = "icon_generate",
                         text = "Generate"
                     )
                 }
             }
         }
-        SpaceItemColumn()
+        SpacerItemColumn()
         //Text to hide
-        MessageBox(input = true, viewModelCreate = viewModelCreate)
-        SpaceItemColumn()
+        MessageBox(viewModelCreate = viewModelCreate)
+        SpacerItemColumn()
         //Buttons (download - share)
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -141,6 +135,7 @@ fun CreateScreenUI(viewModelCreate: ViewModelCreate) {
                     contentDescription = "icon_download"
                 )
             }
+            ButtonSpacerHorizontal()
             ElevatedButton(
                 onClick = { viewModelCreate.exportShare() }
             ) {
@@ -151,13 +146,7 @@ fun CreateScreenUI(viewModelCreate: ViewModelCreate) {
             }
         }
 
-        //TODO - Remove
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
-        ) {
-        }
+        SpacerItemColumn(SpacerEndScreen)
     }
 
 }
