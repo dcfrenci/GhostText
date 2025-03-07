@@ -13,9 +13,11 @@ import androidx.compose.runtime.setValue
 import androidx.core.content.FileProvider
 import androidx.lifecycle.AndroidViewModel
 import com.dcfrenci.ghosttext.data.Ghost
+import com.dcfrenci.ghosttext.data.RSAEncryption
 import java.io.File
 
 class ViewModelCreate(application: Application) : AndroidViewModel(application) {
+    private var viewModelSecurity: ViewModelSecurity? = null
 
     var uri: Uri? by mutableStateOf(null)
         private set
@@ -40,6 +42,10 @@ class ViewModelCreate(application: Application) : AndroidViewModel(application) 
 
     fun updateMessage(string: String) {
         this.message = string
+    }
+
+    fun updateViewModelSecurity(viewModelSecurity: ViewModelSecurity) {
+        this.viewModelSecurity = viewModelSecurity
     }
 
     //Button for loading the image
@@ -67,28 +73,31 @@ class ViewModelCreate(application: Application) : AndroidViewModel(application) 
 
     //Export
     fun exportDownload() {
-        uri?.let {
-            val ghostUri = Ghost(getApplication(), it).getGhostUri(message)
-            if (ghostUri != null) {
+        val encryptedMessage = viewModelSecurity!!.getEncryptedMessage(message)
+        uri?.let { image ->
+            val ghostUri = Ghost(getApplication(), image).getGhostUri(encryptedMessage)
+            ghostUri?.let { ghost ->
                 val context = getApplication<Application>().applicationContext
                 val intent = Intent(Intent.ACTION_SEND)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                intent.setType(context.contentResolver.getType(ghostUri))
-                intent.putExtra(Intent.EXTRA_STREAM, ghostUri)
+                intent.setType(context.contentResolver.getType(ghost))
+                intent.putExtra(Intent.EXTRA_STREAM, ghost)
 
                 if (intent.resolveActivity(context.packageManager) != null) {
                     context.startActivity(intent)
                 }
-            } else {
-                //TODO - Add error during creating ghost image
             }
+//            else {
+//                //TODO - Add error during creating ghost image
+//            }
         }
     }
 
     fun exportShare() {
-        uri?.let {
-            val ghostUri = Ghost(getApplication(), it).getGhostUriPdf(message)
+        val encryptedMessage = viewModelSecurity!!.getEncryptedMessage(message)
+        uri?.let { image ->
+            val ghostUri = Ghost(getApplication(), image).getGhostUriPdf(encryptedMessage)
             if (ghostUri != null) {
                 val context = getApplication<Application>().applicationContext
                 val intent = Intent(Intent.ACTION_SEND)

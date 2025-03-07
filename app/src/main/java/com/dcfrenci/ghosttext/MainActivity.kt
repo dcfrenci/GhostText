@@ -19,8 +19,10 @@ import com.dcfrenci.ghosttext.ui.screen.NavigationGraph
 import com.dcfrenci.ghosttext.ui.theme.GhostTextTheme
 import com.dcfrenci.ghosttext.viewmodel.ViewModelAnalyze
 import com.dcfrenci.ghosttext.viewmodel.ViewModelCreate
+import com.dcfrenci.ghosttext.viewmodel.ViewModelSecurity
 
 class MainActivity : ComponentActivity() {
+    private val viewModelSecurity by viewModels<ViewModelSecurity>()
     private val viewModelCreate by viewModels<ViewModelCreate>()
     private val viewModelAnalyze by viewModels<ViewModelAnalyze>()
 
@@ -41,7 +43,8 @@ class MainActivity : ComponentActivity() {
                         NavigationBar(
                             items = listOf(
                                 BottomNavigationItems.CreateScreen,
-                                BottomNavigationItems.AnalyzeScreen
+                                BottomNavigationItems.AnalyzeScreen,
+                                BottomNavigationItems.SecurityScreen
                             ),
                             navController = navController,
                             modifier = Modifier,
@@ -57,10 +60,14 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ){
+                    viewModelCreate.updateViewModelSecurity(viewModelSecurity)
+                    viewModelAnalyze.updateViewModelSecurity(viewModelSecurity)
                     NavigationGraph(navController = navController,
                         startDestination = startDestination,
                         viewModelCreate = viewModelCreate,
-                        viewModelAnalyze = viewModelAnalyze)
+                        viewModelAnalyze = viewModelAnalyze,
+                        viewModelSecurity = viewModelSecurity
+                    )
                 }
             }
         }

@@ -3,6 +3,7 @@ package com.dcfrenci.ghosttext.data
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Construction
 import androidx.compose.material.icons.outlined.ImageSearch
+import androidx.compose.material.icons.outlined.Key
 import androidx.compose.ui.graphics.vector.ImageVector
 
 
@@ -21,5 +22,11 @@ sealed class BottomNavigationItems(
         route = "analyze_screen",
         title = "AnalyzeScreen",
         icon = Icons.Outlined.ImageSearch
+    )
+
+    data object SecurityScreen: BottomNavigationItems(
+        route = "security_screen",
+        title = "SecurityScreen",
+        icon = Icons.Outlined.Key
     )
 }

@@ -7,6 +7,8 @@ import androidx.lifecycle.AndroidViewModel
 import com.dcfrenci.ghosttext.data.Ghost
 
 class ViewModelAnalyze(application: Application) : AndroidViewModel(application) {
+    private var viewModelSecurity: ViewModelSecurity? = null
+
     var uri: Uri? by mutableStateOf(null)
         private set
     var message: String by mutableStateOf("")
@@ -23,13 +25,18 @@ class ViewModelAnalyze(application: Application) : AndroidViewModel(application)
         this.uri = uri
     }
 
+    fun updateViewModelSecurity(viewModelSecurity: ViewModelSecurity) {
+        this.viewModelSecurity = viewModelSecurity
+    }
+
     private fun updateMessage(string: String) {
         this.message = string
     }
 
     fun getMessage() {
         uri?.let {
-            val ghostMessage = Ghost(getApplication(), it).getMessage()
+            val encryptedMessage = Ghost(getApplication(), it).getMessage()
+            val ghostMessage = viewModelSecurity!!.getDecryptedMessage(encryptedMessage)
             updateMessage(ghostMessage.ifEmpty { "No message found" })
         }
     }

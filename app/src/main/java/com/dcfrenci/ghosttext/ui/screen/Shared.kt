@@ -24,17 +24,20 @@ import coil.compose.rememberAsyncImagePainter
 import com.dcfrenci.ghosttext.data.BottomNavigationItems
 import com.dcfrenci.ghosttext.viewmodel.ViewModelAnalyze
 import com.dcfrenci.ghosttext.viewmodel.ViewModelCreate
+import com.dcfrenci.ghosttext.viewmodel.ViewModelSecurity
 
 @Composable
 fun NavigationGraph(
     navController: NavHostController,
     startDestination: String,
     viewModelCreate: ViewModelCreate,
-    viewModelAnalyze: ViewModelAnalyze
+    viewModelAnalyze: ViewModelAnalyze,
+    viewModelSecurity: ViewModelSecurity
 ) {
     NavHost(navController = navController, startDestination = startDestination) {
         composable(BottomNavigationItems.CreateScreen.route) { CreateScreenUI(viewModelCreate) }
         composable(BottomNavigationItems.AnalyzeScreen.route) { AnalyzeScreenUI(viewModelAnalyze) }
+        composable(BottomNavigationItems.SecurityScreen.route) { SecurityScreenUI(viewModelSecurity) }
     }
 }
 
