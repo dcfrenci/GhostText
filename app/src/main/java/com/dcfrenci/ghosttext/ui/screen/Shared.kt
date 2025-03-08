@@ -3,6 +3,7 @@ package com.dcfrenci.ghosttext.ui.screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -46,8 +47,12 @@ fun Image(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = NightBlack)
-                .border(2.dp, color = NightSilver, shape = RoundedCornerShape(CornerRadius))
+                .background(color = if (isSystemInDarkTheme()) NightBlack else NightSilver)
+                .border(
+                    2.dp,
+                    color = if (isSystemInDarkTheme()) NightSilver else NightBlack,
+                    shape = RoundedCornerShape(CornerRadius)
+                )
         ) {
             viewModelCreate?.let { viewModel ->
                 viewModel.uri?.let {
@@ -61,6 +66,7 @@ fun Image(
                     Icon(
                         imageVector = Icons.Outlined.Image,
                         contentDescription = "image_default",
+                        tint = if (isSystemInDarkTheme()) NightWhite else NightBlack,
                         modifier = Modifier.fillMaxSize(ImageIconWidth)
                     )
                 }
@@ -77,6 +83,7 @@ fun Image(
                     Icon(
                         imageVector = Icons.Outlined.Image,
                         contentDescription = "image_default",
+                        tint = if (isSystemInDarkTheme()) NightWhite else NightBlack,
                         modifier = Modifier.fillMaxSize(ImageIconWidth)
                     )
                 }
@@ -97,7 +104,7 @@ fun MessageBox(
             modifier = Modifier.fillMaxWidth(MessageBoxWidth),
             value = viewModel.message,
             onValueChange = { viewModel.updateMessage(it) },
-            label = { Text(text = "Message") },
+            label = { Text(text = if (viewModel.message.isNotEmpty()) "Message" else "Insert message") },
             readOnly = false
         )
     }
@@ -106,7 +113,7 @@ fun MessageBox(
             modifier = Modifier.fillMaxWidth(MessageBoxWidth),
             value = viewModel.message,
             onValueChange = {},
-            label = { Text(text = "Message") },
+            label = { Text(text = if (viewModel.message.isNotEmpty()) "Message found" else "") },
             readOnly = true
         )
     }
