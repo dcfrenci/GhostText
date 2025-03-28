@@ -8,10 +8,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.dcfrenci.ghosttext.ui.theme.SpacerButtonVertical
 import com.dcfrenci.ghosttext.ui.theme.SpacerElementSmall
 import com.dcfrenci.ghosttext.ui.theme.SpacerEndScreen
 import com.dcfrenci.ghosttext.ui.theme.SpacerStartScreen
@@ -41,6 +41,7 @@ fun CreateScreenUI(viewModelCreate: ViewModelCreate) {
                 arrangement = Arrangement.Center,
                 icon = Icons.Outlined.Upload,
                 iconDescription = "icon_upload",
+                text = "Upload image"
             )
         }
         val galleryPicker = rememberLauncherForActivityResult(
@@ -88,34 +89,6 @@ fun CreateScreenUI(viewModelCreate: ViewModelCreate) {
                         text = "Camera"
                     )
                 }
-                ElevatedButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        viewModelCreate.updateUpload()
-                        viewModelCreate.loadStockPhoto()
-                    }
-                ) {
-                    IconTextButton(
-                        arrangement = Arrangement.Start,
-                        icon = Icons.Outlined.Storage,
-                        iconDescription = "icon_stock_photo",
-                        text = "Stock photo"
-                    )
-                }
-                ElevatedButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        viewModelCreate.updateUpload()
-                        viewModelCreate.loadGenerate()
-                    }
-                ) {
-                    IconTextButton(
-                        arrangement = Arrangement.Start,
-                        icon = Icons.Outlined.AutoAwesome,
-                        iconDescription = "icon_generate",
-                        text = "Generate"
-                    )
-                }
             }
         }
         SpacerItemColumn()
@@ -123,25 +96,28 @@ fun CreateScreenUI(viewModelCreate: ViewModelCreate) {
         MessageBox(viewModelCreate = viewModelCreate)
         SpacerItemColumn()
         //Buttons (download - share)
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             ElevatedButton(
                 onClick = { viewModelCreate.exportDownload() }
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.Download,
-                    contentDescription = "icon_download"
+                IconTextButton(
+                    arrangement = Arrangement.Center,
+                    icon = Icons.Outlined.Download,
+                    iconDescription = "icon_download",
+                    text = "Download PNG"
                 )
             }
-            ButtonSpacerHorizontal()
+            SpacerItemColumn(SpacerButtonVertical)
             ElevatedButton(
                 onClick = { viewModelCreate.exportShare() }
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.Share,
-                    contentDescription = "icon_share"
+                IconTextButton(
+                    arrangement = Arrangement.Center,
+                    icon = Icons.Outlined.Share,
+                    iconDescription = "icon_share",
+                    text = "Share as PDF"
                 )
             }
         }

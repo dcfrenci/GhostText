@@ -37,7 +37,7 @@ class Ghost(
             canvas.drawBitmap(bitmap, 0f, 0f, null)
             pdfDocument.finishPage(page)
 
-            val fileUri = createUri("ghost_pdf_${System.currentTimeMillis()}", ".pdf")
+            val fileUri = createUri("image_pdf_${System.currentTimeMillis()}", ".pdf")
             context.contentResolver.openOutputStream(fileUri)?.use { outputStream ->
                 pdfDocument.writeTo(outputStream)
             }

@@ -7,6 +7,7 @@ val         Elevation = 10.dp
 const val   SpacerStartScreen = 75
 const val   SpacerEndScreen = 150
 const val   SpacerElementSmall = 30
+const val   SpacerButtonVertical = 15
 val         SpacerButtonHorizontal = 10.dp
 const val   MessageBoxWidth = 0.8f
 const val   ImageIconWidth = 0.3f
